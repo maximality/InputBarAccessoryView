@@ -189,7 +189,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.manager = self
                 cell.imageView.image = image
                 cell.imageView.tintColor = tintColor
-                cell.deleteButton.backgroundColor = tintColor
+                //cell.deleteButton.backgroundColor = tintColor
                 return cell
             default:
                 return collectionView.dequeueReusableCell(withReuseIdentifier: AttachmentCell.reuseIdentifier, for: indexPath) as! AttachmentCell

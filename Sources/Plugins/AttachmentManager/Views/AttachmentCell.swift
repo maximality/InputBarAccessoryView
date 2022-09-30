@@ -56,17 +56,10 @@ open class AttachmentCell: UICollectionViewCell {
     
     open lazy var deleteButton: UIButton = { [weak self] in
         let button = UIButton()
-        let textColor: UIColor
-        if #available(iOS 13, *) {
-            textColor = .systemBackground
-        } else {
-            textColor = .white
-        }
-        button.setAttributedTitle(NSMutableAttributedString().bold("X", fontSize: 15, textColor: textColor), for: .normal)
-        button.setAttributedTitle(NSMutableAttributedString().bold("X", fontSize: 15, textColor: textColor.withAlphaComponent(0.5)), for: .highlighted)
-        button.layer.cornerRadius = 10
+        button.setImage(UIImage(named: "ic_remove_item", in: .module, compatibleWith: nil), for: .normal)
         button.clipsToBounds = true
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 10.0
         button.addTarget(self, action: #selector(deleteAttachment), for: .touchUpInside)
         return button
     }()
