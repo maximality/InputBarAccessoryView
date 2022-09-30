@@ -194,7 +194,7 @@ extension CommonTableViewController: UIImagePickerControllerDelegate, UINavigati
         
         dismiss(animated: true, completion: {
             if let pickedImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
-                let handled = self.attachmentManager.handleInput(of: pickedImage)
+                let handled = self.attachmentManager.handleInput(of: VideoAttachment(thumbnail: pickedImage))
                 if !handled {
                     // throw error
                 }

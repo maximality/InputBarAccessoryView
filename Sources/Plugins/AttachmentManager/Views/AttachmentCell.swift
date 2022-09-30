@@ -56,12 +56,21 @@ open class AttachmentCell: UICollectionViewCell {
     
     open lazy var deleteButton: UIButton = { [weak self] in
         let button = UIButton()
-        button.setImage(UIImage(named: "ic_remove_item", in: .module, compatibleWith: nil), for: .normal)
+        button.setImage(UIImage(named: "ic_remove_item", in: .module, with: nil), for: .normal)
         button.clipsToBounds = true
         button.backgroundColor = .white
         button.layer.cornerRadius = 10.0
         button.addTarget(self, action: #selector(deleteAttachment), for: .touchUpInside)
         return button
+    }()
+    
+    open lazy var videoImageView: UIImageView = { [weak self] in
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "ic_video", in: .module, with: nil)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
     }()
     
     open var attachment: AttachmentManager.Attachment?
@@ -103,6 +112,7 @@ open class AttachmentCell: UICollectionViewCell {
         
         contentView.addSubview(containerView)
         contentView.addSubview(deleteButton)
+        contentView.addSubview(videoImageView)
     }
 
     private func setupConstraints() {
@@ -114,6 +124,11 @@ open class AttachmentCell: UICollectionViewCell {
             right:  containerView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -padding.right)
         ).activate()
         deleteButton.addConstraints(contentView.topAnchor, right: contentView.rightAnchor, widthConstant: 20, heightConstant: 20)
+        let constaints = [
+            videoImageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            videoImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+        ]
+        NSLayoutConstraint.activate(constaints)
     }
     
     private func updateContainerPadding() {

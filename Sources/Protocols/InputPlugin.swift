@@ -27,6 +27,14 @@
 
 import UIKit
 
+public class VideoAttachment {
+    public let thumbnail: UIImage
+    
+    public init(thumbnail: UIImage) {
+        self.thumbnail = thumbnail
+    }
+}
+
 /// `InputPlugin` is a protocol that makes integrating plugins to the `InputBarAccessoryView` easy.
 public protocol InputPlugin: AnyObject {
     

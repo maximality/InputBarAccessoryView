@@ -33,6 +33,7 @@ open class AttachmentManager: NSObject, InputPlugin {
         case image(UIImage)
         case url(URL)
         case data(Data)
+        case video(UIImage)
         
         @available(*, deprecated, message: ".other(AnyObject) has been depricated as of 2.0.0")
         case other(AnyObject)
@@ -102,6 +103,8 @@ open class AttachmentManager: NSObject, InputPlugin {
             attachment = .url(url)
         } else if let data = object as? Data {
             attachment = .data(data)
+        } else if let video = object as? VideoAttachment {
+            attachment = .video(video.thumbnail)
         } else {
             return false
         }
@@ -189,7 +192,18 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.manager = self
                 cell.imageView.image = image
                 cell.imageView.tintColor = tintColor
-                //cell.deleteButton.backgroundColor = tintColor
+                cell.videoImageView.isHidden = true
+                return cell
+            case .video(let image):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageAttachmentCell.reuseIdentifier, for: indexPath) as? ImageAttachmentCell else {
+                    fatalError()
+                }
+                cell.attachment = attachment
+                cell.indexPath = indexPath
+                cell.manager = self
+                cell.imageView.image = image
+                cell.imageView.tintColor = tintColor
+                cell.videoImageView.isHidden = false
                 return cell
             default:
                 return collectionView.dequeueReusableCell(withReuseIdentifier: AttachmentCell.reuseIdentifier, for: indexPath) as! AttachmentCell

@@ -119,7 +119,7 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         
         picker.dismiss(animated: true, completion: {
             if let pickedImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
-                self.inputPlugins.forEach { _ = $0.handleInput(of: pickedImage) }
+                self.inputPlugins.forEach { _ = $0.handleInput(of: VideoAttachment(thumbnail: pickedImage)) }
             }
         })
     }
