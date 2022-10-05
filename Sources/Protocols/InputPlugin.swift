@@ -35,6 +35,22 @@ public class VideoAttachment {
     }
 }
 
+public class FileAttachment {
+    public let url: URL
+    public let image: UIImage
+    public let color: UIColor
+    public let height: CGFloat?
+    public let width: CGFloat?
+    
+    public init(url: URL, image: UIImage, color: UIColor = .lightGray, height: CGFloat? = nil, width: CGFloat? = nil) {
+        self.url = url
+        self.image = image
+        self.color = color
+        self.height = height
+        self.width = width
+    }
+}
+
 /// `InputPlugin` is a protocol that makes integrating plugins to the `InputBarAccessoryView` easy.
 public protocol InputPlugin: AnyObject {
     

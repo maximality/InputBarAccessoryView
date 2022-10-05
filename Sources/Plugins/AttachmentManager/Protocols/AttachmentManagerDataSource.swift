@@ -38,7 +38,7 @@ public protocol AttachmentManagerDataSource: AnyObject {
     ///   - attachment: The object
     ///   - index: The index in the AttachmentView
     /// - Returns: An AttachmentCell
-    func attachmentManager(_ manager: AttachmentManager, cellFor attachment: AttachmentManager.Attachment, at index: Int) -> AttachmentCell
+    func attachmentManager(_ manager: AttachmentManager, cellFor attachment: AttachmentManager.Attachment, at index: Int) -> AttachmentCell?
     
     /// The CGSize of the AttachmentCell for the attachment that is to be inserted into the AttachmentView
     ///

@@ -65,3 +65,74 @@ open class ImageAttachmentCell: AttachmentCell {
         imageView.fillSuperview()
     }
 }
+
+open class FileAttachmentCell: AttachmentCell {
+    
+    override open class var reuseIdentifier: String {
+        return "FileAttachmentCell"
+    }
+    
+    public let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    public let nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
+    
+    public let memoryLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .regular)
+        return label
+    }()
+    
+    // MARK: - Initialization
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    open override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+        nameLabel.text = nil
+        memoryLabel.text = nil
+    }
+    
+    // MARK: - Setup
+    
+    private func setup() {
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.clipsToBounds = true
+        memoryLabel.translatesAutoresizingMaskIntoConstraints = false
+        memoryLabel.clipsToBounds = true
+        containerView.addSubview(imageView)
+        containerView.addSubview(nameLabel)
+        containerView.addSubview(memoryLabel)
+
+        NSLayoutConstraint.activate([
+            imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 17.0),
+            imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 27.0),
+            imageView.widthAnchor.constraint(equalToConstant: 35.0),
+            nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 11.0),
+            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 11.0),
+            nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 11.0),
+            memoryLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -11),
+            memoryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 11.0),
+            memoryLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 11.0)
+        ])
+    }
+}

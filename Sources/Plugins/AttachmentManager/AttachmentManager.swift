@@ -34,6 +34,7 @@ open class AttachmentManager: NSObject, InputPlugin {
         case url(URL)
         case data(Data)
         case video(UIImage)
+        case file(FileAttachment)
         
         @available(*, deprecated, message: ".other(AnyObject) has been depricated as of 2.0.0")
         case other(AnyObject)
@@ -105,6 +106,8 @@ open class AttachmentManager: NSObject, InputPlugin {
             attachment = .data(data)
         } else if let video = object as? VideoAttachment {
             attachment = .video(video.thumbnail)
+        } else if let file = object as? FileAttachment {
+            attachment = .file(file)
         } else {
             return false
         }
@@ -205,6 +208,27 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.imageView.tintColor = tintColor
                 cell.videoImageView.isHidden = false
                 return cell
+            case .file(let file):
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FileAttachmentCell.reuseIdentifier, for: indexPath) as? FileAttachmentCell else {
+                    fatalError()
+                }
+                cell.attachment = attachment
+                cell.indexPath = indexPath
+                cell.nameLabel.text = file.url.deletingPathExtension().lastPathComponent
+                cell.memoryLabel.text = file.url.pathExtension
+                if file.url.startAccessingSecurityScopedResource() {
+                    if let fileAttributes = try? FileManager.default.attributesOfItem(atPath: file.url.path), let bytes = fileAttributes[.size] as? Int64 {
+                        cell.memoryLabel.text = "\(file.url.pathExtension), \(ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .file))"
+                    }
+                }
+                file.url.stopAccessingSecurityScopedResource()
+                cell.manager = self
+                cell.imageView.image = file.image
+                cell.imageView.tintColor = tintColor
+                cell.containerView.backgroundColor = .white
+                cell.containerView.layer.borderWidth = 1.0
+                cell.containerView.layer.borderColor = file.color.cgColor
+                return cell
             default:
                 return collectionView.dequeueReusableCell(withReuseIdentifier: AttachmentCell.reuseIdentifier, for: indexPath) as! AttachmentCell
             }
@@ -224,7 +248,13 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             height -= (layout.sectionInset.bottom + layout.sectionInset.top + collectionView.contentInset.top + collectionView.contentInset.bottom)
         }
-        return CGSize(width: height, height: height)
+        let attachment = attachments[indexPath.row]
+        switch attachment {
+        case .file(let fileAttributes):
+            return CGSize(width: fileAttributes.width ?? height, height: fileAttributes.height ?? height)
+        default:
+            return CGSize(width: height, height: height)
+        }
     }
     
     open func createAttachmentCell(in collectionView: UICollectionView, at indexPath: IndexPath) -> AttachmentCell {
