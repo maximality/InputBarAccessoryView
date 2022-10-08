@@ -130,7 +130,7 @@ open class FileAttachmentCell: AttachmentCell {
             nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 11.0),
             nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 11.0),
             nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 11.0),
-            memoryLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -11),
+            memoryLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
             memoryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 11.0),
             memoryLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 11.0)
         ])

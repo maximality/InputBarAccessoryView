@@ -33,7 +33,7 @@ open class AttachmentManager: NSObject, InputPlugin {
         case image(UIImage)
         case url(URL)
         case data(Data)
-        case video(UIImage)
+        case video(VideoAttachment)
         case file(FileAttachment)
         
         @available(*, deprecated, message: ".other(AnyObject) has been depricated as of 2.0.0")
@@ -63,6 +63,9 @@ open class AttachmentManager: NSObject, InputPlugin {
     
     /// A flag to determine if the AddAttachmentCell is visible
     open var showAddAttachmentCell = true { didSet { attachmentView.reloadData() } }
+    
+    /// A flag to selected local attachments
+    open var selecteAttacmhentCell = false
     
     /// The color applied to the backgroundColor of the deleteButton in each `AttachmentCell`
     open var tintColor: UIColor {
@@ -105,7 +108,7 @@ open class AttachmentManager: NSObject, InputPlugin {
         } else if let data = object as? Data {
             attachment = .data(data)
         } else if let video = object as? VideoAttachment {
-            attachment = .video(video.thumbnail)
+            attachment = .video(video)
         } else if let file = object as? FileAttachment {
             attachment = .file(file)
         } else {
@@ -156,9 +159,13 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
     // MARK: - UICollectionViewDelegate
     
     final public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.row == attachments.count {
-            delegate?.attachmentManager(self, didSelectAddAttachmentAt: indexPath.row)
-            delegate?.attachmentManager(self, shouldBecomeVisible: attachments.count > 0 || isPersistent)
+        if selecteAttacmhentCell {
+            delegate?.attachmentManager(self, didSelectAttachmentAt: indexPath.row)
+        } else {
+            if indexPath.row == attachments.count {
+                delegate?.attachmentManager(self, didSelectAddAttachmentAt: indexPath.row)
+                delegate?.attachmentManager(self, shouldBecomeVisible: attachments.count > 0 || isPersistent)
+            }
         }
     }
     
@@ -197,14 +204,14 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.imageView.tintColor = tintColor
                 cell.videoImageView.isHidden = true
                 return cell
-            case .video(let image):
+            case .video(let video):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageAttachmentCell.reuseIdentifier, for: indexPath) as? ImageAttachmentCell else {
                     fatalError()
                 }
                 cell.attachment = attachment
                 cell.indexPath = indexPath
                 cell.manager = self
-                cell.imageView.image = image
+                cell.imageView.image = video.thumbnail
                 cell.imageView.tintColor = tintColor
                 cell.videoImageView.isHidden = false
                 return cell
@@ -225,6 +232,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.manager = self
                 cell.imageView.image = file.image
                 cell.imageView.tintColor = tintColor
+                cell.containerView.layer.cornerRadius = 10
                 cell.containerView.backgroundColor = .white
                 cell.containerView.layer.borderWidth = 1.0
                 cell.containerView.layer.borderColor = file.color.cgColor

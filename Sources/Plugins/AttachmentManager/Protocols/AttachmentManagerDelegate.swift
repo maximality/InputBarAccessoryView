@@ -67,6 +67,14 @@ public protocol AttachmentManagerDelegate: AnyObject {
     ///   - manager: The AttachmentManager
     ///   - attachments: The index of the AddAttachmentCell
     func attachmentManager(_ manager: AttachmentManager, didSelectAddAttachmentAt index: Int)
+    
+    /// Notifys when the cell was selected
+    ///
+    /// - Parameters:
+    ///   - manager: The AttachmentManager
+    ///   - attachments: The index of the AddAttachmentCell
+
+    func attachmentManager(_ manager: AttachmentManager, didSelectAttachmentAt index: Int)
 }
 
 public extension AttachmentManagerDelegate {
@@ -78,4 +86,6 @@ public extension AttachmentManagerDelegate {
     func attachmentManager(_ manager: AttachmentManager, didReloadTo attachments: [AttachmentManager.Attachment]) {}
     
     func attachmentManager(_ manager: AttachmentManager, didSelectAddAttachmentAt index: Int) {}
+    
+    func attachmentManager(_ manager: AttachmentManager, didSelectAttachmentAt index: Int) {}
 }

@@ -28,9 +28,11 @@
 import UIKit
 
 public class VideoAttachment {
+    public let url: URL
     public let thumbnail: UIImage
     
-    public init(thumbnail: UIImage) {
+    public init(url: URL, thumbnail: UIImage) {
+        self.url = url
         self.thumbnail = thumbnail
     }
 }
