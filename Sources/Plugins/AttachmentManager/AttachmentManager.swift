@@ -76,6 +76,9 @@ open class AttachmentManager: NSObject, InputPlugin {
         }
     }
     
+    /// The color for border
+    open var borderColor: UIColor = .lightGray
+    
     // MARK: - Initialization
     
     public override init() {
@@ -203,6 +206,8 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.imageView.image = image
                 cell.imageView.tintColor = tintColor
                 cell.videoImageView.isHidden = true
+                cell.containerView.layer.borderWidth = 1.0
+                cell.containerView.layer.borderColor = borderColor.cgColor
                 return cell
             case .video(let video):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageAttachmentCell.reuseIdentifier, for: indexPath) as? ImageAttachmentCell else {
@@ -214,6 +219,8 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.imageView.image = video.thumbnail
                 cell.imageView.tintColor = tintColor
                 cell.videoImageView.isHidden = false
+                cell.containerView.layer.borderWidth = 1.0
+                cell.containerView.layer.borderColor = borderColor.cgColor
                 return cell
             case .file(let file):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FileAttachmentCell.reuseIdentifier, for: indexPath) as? FileAttachmentCell else {
@@ -235,7 +242,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.containerView.layer.cornerRadius = 10
                 cell.containerView.backgroundColor = .white
                 cell.containerView.layer.borderWidth = 1.0
-                cell.containerView.layer.borderColor = file.color.cgColor
+                cell.containerView.layer.borderColor = borderColor.cgColor
                 return cell
             default:
                 return collectionView.dequeueReusableCell(withReuseIdentifier: AttachmentCell.reuseIdentifier, for: indexPath) as! AttachmentCell
