@@ -81,7 +81,7 @@ open class InputBarAccessoryView: UIView {
             backgroundView.backgroundColor = isTranslucent ? color.withAlphaComponent(0.75) : color
         }
     }
-
+    
     /// A SeparatorLine that is anchored at the top of the InputBarAccessoryView
     public let separatorLine = SeparatorLine()
     
@@ -864,7 +864,7 @@ open class InputBarAccessoryView: UIView {
 
     /// Enables/Disables the sendButton based on the InputTextView's text being empty
     /// Calls each items `textViewDidChangeAction` method
-    /// Calls the delegates `textViewTextDidChangeTo` method
+    /// Calls the delegates `textViewTextDidChangeTo, textViewTextDidChangeTo + detectNewLine` method
     /// Invalidates the intrinsicContentSize
     @objc
     open func inputTextViewDidChange() {
@@ -885,6 +885,7 @@ open class InputBarAccessoryView: UIView {
         
         items.forEach { $0.textViewDidChangeAction(with: self.inputTextView) }
         delegate?.inputBar(self, textViewTextDidChangeTo: trimmedText)
+        delegate?.inputBar(self, textViewTextDidChangeTo: trimmedText, detectNewLine: inputTextView.text.contains("\n"))
         
         if shouldInvalidateIntrinsicContentSize {
             // Prevent un-needed content size invalidation
