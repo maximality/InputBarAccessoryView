@@ -81,6 +81,11 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
     /// Default value is `TRUE`
     open var keepPrefixOnCompletion = true
     
+    
+    /// Used for detect characters count for enable/disable textVIew, if is nil - not used
+    /// Default value is `NIL`
+    open var maxCountCharactersForTextView: Int?
+    
     /// Allows a single space character to be entered mid autocompletion.
     ///
     /// For example, your autocomplete is "Nathan Tannar", the .whitespace deliminater
@@ -414,6 +419,21 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
     public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         // Ensure that the text to be inserted is not using previous attributes
+        
+        // Logic for detect and enabled/disable textView
+        
+        if maxCountCharactersForTextView != nil {
+            guard let textRange = Range(range, in: textView.text) else { return false }
+            
+            let newText = textView.text.replacingCharacters(in: textRange, with: text).trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            guard maxCountCharactersForTextView ?? 0 >= newText.count || text == "" else {
+                return false
+            }
+        }
+        
+        // End logic for detect enable/disable textView
+        
         preserveTypingAttributes()
         
         if let session = currentSession {
