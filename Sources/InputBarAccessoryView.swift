@@ -885,7 +885,7 @@ open class InputBarAccessoryView: UIView {
         
         items.forEach { $0.textViewDidChangeAction(with: self.inputTextView) }
         delegate?.inputBar(self, textViewTextDidChangeTo: trimmedText)
-        delegate?.inputBar(self, textViewTextDidChangeTo: trimmedText, detectNewLine: inputTextView.text.contains("\n"))
+        delegate?.inputBar(self, textViewTextDidChangeTo: trimmedText, detectNewLine: inputTextView.text.last == "\n" && inputTextView.text != UIPasteboard.general.string)
         
         if shouldInvalidateIntrinsicContentSize {
             // Prevent un-needed content size invalidation
