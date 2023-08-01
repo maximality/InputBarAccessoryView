@@ -293,6 +293,14 @@ open class InputBarAccessoryView: UIView {
     /// The default value is `FALSE`
     open var shouldAnimateTextDidChangeLayout = false
     
+    /// A flag indicating whether the TabBar should be shown together with the current view controller.
+    /// If `true`, the TabBar will be visible. If `false`, the TabBar will be hidden.
+    var shouldShowTabBar: Bool = true
+    
+    /// A boolean variable that indicates whether the current controller has a TabBar or not.
+    /// If `true`, the controller has a TabBar. If `false`, the controller does not have a TabBar.
+    open var hasTabBar: Bool = false
+    
     /// The height that will fit the current text in the InputTextView based on its current bounds
     public var requiredInputTextViewHeight: CGFloat {
         guard middleContentView == inputTextView else {
@@ -391,7 +399,6 @@ open class InputBarAccessoryView: UIView {
     
     /// Sets up the default properties
     open func setup() {
-
         backgroundColor = InputBarAccessoryView.defaultBackgroundColor
         autoresizingMask = [.flexibleHeight]
         setupSubviews()
@@ -463,9 +470,17 @@ open class InputBarAccessoryView: UIView {
             right:  topStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -(topStackViewPadding.right + frameInsets.right))
         )
         
+        var bottomContentViewConstraint: NSLayoutConstraint?
+        
+        if hasTabBar {
+            bottomContentViewConstraint = contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(padding.bottom + (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? .zero)))
+        } else {
+            bottomContentViewConstraint = contentView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -padding.bottom)
+        }
+        
         contentViewLayoutSet = NSLayoutConstraintSet(
             top:    contentView.topAnchor.constraint(equalTo: topStackView.bottomAnchor, constant: padding.top),
-            bottom: contentView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -padding.bottom),
+            bottom: bottomContentViewConstraint,
             left:   contentView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding.left + frameInsets.left),
             right:  contentView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -(padding.right + frameInsets.right))
         )
@@ -515,7 +530,11 @@ open class InputBarAccessoryView: UIView {
         windowAnchor?.constant = -padding.bottom
         windowAnchor?.priority = UILayoutPriority(rawValue: 750)
         windowAnchor?.isActive = true
-        backgroundViewLayoutSet?.bottom?.constant = window.safeAreaInsets.bottom
+        if hasTabBar {
+            backgroundViewLayoutSet?.bottom?.constant = 0
+        } else {
+            backgroundViewLayoutSet?.bottom?.constant = window.safeAreaInsets.bottom
+        }
     }
     
     // MARK: - Constraint Layout Updates
@@ -533,7 +552,11 @@ open class InputBarAccessoryView: UIView {
         contentViewLayoutSet?.top?.constant = padding.top
         contentViewLayoutSet?.left?.constant = padding.left + frameInsets.left
         contentViewLayoutSet?.right?.constant = -(padding.right + frameInsets.right)
-        contentViewLayoutSet?.bottom?.constant = -padding.bottom
+        if hasTabBar {
+            contentViewLayoutSet?.bottom?.constant = -(padding.bottom + (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? .zero))
+        } else {
+            contentViewLayoutSet?.bottom?.constant = -padding.bottom
+        }
         windowAnchor?.constant = -padding.bottom
     }
     
