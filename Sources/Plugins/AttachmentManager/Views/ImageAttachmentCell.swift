@@ -73,21 +73,22 @@ open class FileAttachmentCell: AttachmentCell {
     }
     
     public let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+        let tempView = UIImageView()
+        tempView.contentMode = .scaleAspectFit
+        return tempView
     }()
     
     public let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .medium)
-        return label
+        let tempView = UILabel()
+        tempView.font = .systemFont(ofSize: 14, weight: .medium)
+        return tempView
     }()
     
     public let memoryLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        return label
+        let tempView = UILabel()
+        tempView.font = .systemFont(ofSize: 14, weight: .regular)
+        tempView.textColor = .black.withAlphaComponent(0.6)
+        return tempView
     }()
     
     // MARK: - Initialization
@@ -123,16 +124,16 @@ open class FileAttachmentCell: AttachmentCell {
         containerView.addSubview(memoryLabel)
 
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 17.0),
+            imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16.0),
             imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 27.0),
-            imageView.widthAnchor.constraint(equalToConstant: 35.0),
-            nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 11.0),
-            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 11.0),
-            nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -11.0),
-            memoryLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
-            memoryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 11.0),
-            memoryLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 11.0)
+            imageView.heightAnchor.constraint(equalToConstant: 28.0),
+            imageView.widthAnchor.constraint(equalToConstant: 36.0),
+            nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 13.0),
+            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8.0),
+            nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0),
+            memoryLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0),
+            memoryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8.0),
+            memoryLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0)
         ])
     }
 }

@@ -79,6 +79,10 @@ open class AttachmentManager: NSObject, InputPlugin {
     /// The color for border
     open var borderColor: UIColor = .lightGray
     
+    /// Setup delete button image
+
+    open var deleteButtonImage: UIImage?
+        
     // MARK: - Initialization
     
     public override init() {
@@ -203,6 +207,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.attachment = attachment
                 cell.indexPath = indexPath
                 cell.manager = self
+                cell.deleteButtonImage = deleteButtonImage
                 cell.imageView.image = image
                 cell.imageView.tintColor = tintColor
                 cell.videoImageView.isHidden = true
@@ -216,6 +221,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.attachment = attachment
                 cell.indexPath = indexPath
                 cell.manager = self
+                cell.deleteButtonImage = deleteButtonImage
                 cell.imageView.image = video.thumbnail
                 cell.imageView.tintColor = tintColor
                 cell.videoImageView.isHidden = false
@@ -237,6 +243,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 }
                 file.url.stopAccessingSecurityScopedResource()
                 cell.manager = self
+                cell.deleteButtonImage = deleteButtonImage
                 cell.imageView.image = file.image
                 cell.imageView.tintColor = tintColor
                 cell.containerView.layer.cornerRadius = 10
@@ -247,7 +254,6 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
             default:
                 return collectionView.dequeueReusableCell(withReuseIdentifier: AttachmentCell.reuseIdentifier, for: indexPath) as! AttachmentCell
             }
-            
         }
     }
     
@@ -278,6 +284,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
             fatalError()
         }
         cell.deleteButton.isHidden = true
+        
         // Draw a plus
         let frame = CGRect(origin: CGPoint(x: cell.bounds.origin.x,
                                            y: cell.bounds.origin.y),

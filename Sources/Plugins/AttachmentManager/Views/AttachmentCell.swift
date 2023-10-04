@@ -48,7 +48,7 @@ open class AttachmentCell: UICollectionViewCell {
         return view
     }()
     
-    open var padding: UIEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5) {
+    open var padding: UIEdgeInsets = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4) {
         didSet {
             updateContainerPadding()
         }
@@ -60,6 +60,8 @@ open class AttachmentCell: UICollectionViewCell {
         button.clipsToBounds = true
         button.backgroundColor = .white
         button.layer.cornerRadius = 10.0
+        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.borderWidth = 1.0
         button.addTarget(self, action: #selector(deleteAttachment), for: .touchUpInside)
         return button
     }()
@@ -78,6 +80,12 @@ open class AttachmentCell: UICollectionViewCell {
     open var indexPath: IndexPath?
     
     open weak var manager: AttachmentManager?
+    
+    open var deleteButtonImage: UIImage? {
+        didSet {
+            updateDeleteButtonImage()
+        }
+    }
     
     private var containerViewLayoutSet: NSLayoutConstraintSet?
     
@@ -137,6 +145,11 @@ open class AttachmentCell: UICollectionViewCell {
         containerViewLayoutSet?.bottom?.constant = -padding.bottom
         containerViewLayoutSet?.left?.constant = padding.left
         containerViewLayoutSet?.right?.constant = -padding.right
+    }
+    
+    private func updateDeleteButtonImage() {
+        guard let deleteButtonImage else { return }
+        deleteButton.setImage(deleteButtonImage, for: .normal)
     }
     
     // MARK: - User Actions
