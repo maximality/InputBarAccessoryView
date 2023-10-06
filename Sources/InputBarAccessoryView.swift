@@ -301,6 +301,13 @@ open class InputBarAccessoryView: UIView {
     /// If `true`, the controller has a TabBar. If `false`, the controller does not have a TabBar.
     open var hasTabBar: Bool = false
     
+    /// A boolean variable that indicates whether the current view is a ScrollView.
+    /// If `true`, the view is a ScrollView. If `false`, the view is not a ScrollView.
+
+    open var isScrollView: Bool = false
+    
+    /// A boole
+    
     /// The height that will fit the current text in the InputTextView based on its current bounds
     public var requiredInputTextViewHeight: CGFloat {
         guard middleContentView == inputTextView else {
@@ -593,12 +600,14 @@ open class InputBarAccessoryView: UIView {
         
         var inputTextViewHeight = requiredInputTextViewHeight
         if inputTextViewHeight >= maxTextViewHeight {
-            if !isOverMaxTextViewHeight {
-                textViewHeightAnchor?.isActive = true
-                inputTextView.isScrollEnabled = true
-                isOverMaxTextViewHeight = true
+            if isScrollView == false {
+                if !isOverMaxTextViewHeight {
+                    textViewHeightAnchor?.isActive = true
+                    inputTextView.isScrollEnabled = true
+                    isOverMaxTextViewHeight = true
+                }
+                inputTextViewHeight = maxTextViewHeight
             }
-            inputTextViewHeight = maxTextViewHeight
         } else {
             if isOverMaxTextViewHeight {
                 textViewHeightAnchor?.isActive = false || shouldForceTextViewMaxHeight
