@@ -896,7 +896,7 @@ open class InputBarAccessoryView: UIView {
 
     /// Enables/Disables the sendButton based on the InputTextView's text being empty
     /// Calls each items `textViewDidChangeAction` method
-    /// Calls the delegates `textViewTextDidChangeTo, textViewTextDidChangeTo + detectNewLine` method
+    /// Calls the delegates `textViewTextDidChangeTo
     /// Invalidates the intrinsicContentSize
     @objc
     open func inputTextViewDidChange() {
@@ -917,7 +917,6 @@ open class InputBarAccessoryView: UIView {
         
         items.forEach { $0.textViewDidChangeAction(with: self.inputTextView) }
         delegate?.inputBar(self, textViewTextDidChangeTo: trimmedText)
-        delegate?.inputBar(self, textViewTextDidChangeTo: trimmedText, detectNewLine: inputTextView.text.last == "\n" && inputTextView.text != UIPasteboard.general.string)
         
         if shouldInvalidateIntrinsicContentSize {
             // Prevent un-needed content size invalidation

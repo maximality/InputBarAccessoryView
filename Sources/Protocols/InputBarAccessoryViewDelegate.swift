@@ -60,14 +60,6 @@ public protocol InputBarAccessoryViewDelegate: AnyObject {
     ///   - inputBar: The InputBarAccessoryView
     ///   - gesture: The gesture that was recognized
     func inputBar(_ inputBar: InputBarAccessoryView, didSwipeTextViewWith gesture: UISwipeGestureRecognizer)
-    
-    /// Called when the InputBarAccessoryView's InputTextView's text has changed. Useful for adding your own logic without the. Hels determined new line
-    ///
-    /// - Parameters:
-    ///   - inputBar: The InputBarAccessoryView
-    ///       ///   - text: The current text in the InputBarAccessoryView's InputTextView
-    ///   - bool: The bool detect new line
-    func inputBar(_ inputBar: InputBarAccessoryView, textViewTextDidChangeTo text: String, detectNewLine bool: Bool)
 }
 
 public extension InputBarAccessoryViewDelegate {
@@ -79,6 +71,4 @@ public extension InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, textViewTextDidChangeTo text: String) {}
     
     func inputBar(_ inputBar: InputBarAccessoryView, didSwipeTextViewWith gesture: UISwipeGestureRecognizer) {}
-    
-    func inputBar(_ inputBar: InputBarAccessoryView, textViewTextDidChangeTo text: String, detectNewLine bool: Bool) {}
 }
