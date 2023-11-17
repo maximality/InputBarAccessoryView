@@ -79,8 +79,12 @@ open class AttachmentManager: NSObject, InputPlugin {
     /// The color for border
     open var borderColor: UIColor = .lightGray
     
+    /// Hide delete button
+    
+    open var showDeleteButton = true
+    
     /// Setup delete button image
-
+    ///
     open var deleteButtonImage: UIImage?
         
     // MARK: - Initialization
@@ -207,6 +211,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.attachment = attachment
                 cell.indexPath = indexPath
                 cell.manager = self
+                cell.showDeleteButton = showDeleteButton
                 cell.deleteButtonImage = deleteButtonImage
                 cell.imageView.image = image
                 cell.imageView.tintColor = tintColor
@@ -221,6 +226,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.attachment = attachment
                 cell.indexPath = indexPath
                 cell.manager = self
+                cell.showDeleteButton = showDeleteButton
                 cell.deleteButtonImage = deleteButtonImage
                 cell.imageView.image = video.thumbnail
                 cell.imageView.tintColor = tintColor
@@ -244,6 +250,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 file.url.stopAccessingSecurityScopedResource()
                 cell.manager = self
                 cell.deleteButtonImage = deleteButtonImage
+                cell.showDeleteButton = showDeleteButton
                 cell.imageView.image = file.image
                 cell.imageView.tintColor = tintColor
                 cell.containerView.layer.cornerRadius = 10

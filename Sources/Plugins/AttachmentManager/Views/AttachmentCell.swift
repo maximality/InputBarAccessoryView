@@ -87,6 +87,12 @@ open class AttachmentCell: UICollectionViewCell {
         }
     }
     
+    open var showDeleteButton: Bool = true {
+        didSet {
+            updateShowDeleteButton()
+        }
+    }
+    
     private var containerViewLayoutSet: NSLayoutConstraintSet?
     
     // MARK: - Initialization
@@ -140,11 +146,14 @@ open class AttachmentCell: UICollectionViewCell {
     }
     
     private func updateContainerPadding() {
-        
         containerViewLayoutSet?.top?.constant = padding.top
         containerViewLayoutSet?.bottom?.constant = -padding.bottom
         containerViewLayoutSet?.left?.constant = padding.left
         containerViewLayoutSet?.right?.constant = -padding.right
+    }
+    
+    private func updateShowDeleteButton() {
+        deleteButton.isHidden = !showDeleteButton
     }
     
     private func updateDeleteButtonImage() {
