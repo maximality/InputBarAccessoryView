@@ -415,6 +415,26 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
     public func textViewDidChange(_ textView: UITextView) {
         reloadData()
     }
+        
+    public func textViewDidChangeSelection(_ textView: UITextView) {
+        let cursorPosition = textView.selectedRange.location
+        let textBeforeCursor = (textView.text as NSString).substring(to: cursorPosition)
+        let lines = textBeforeCursor.components(separatedBy: .newlines)
+        if let currentLine = lines.last, currentLine.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("\u{2022}") {
+            delegate?.autcompleteManager(complete: false)
+        } else {
+            let afterCursor = textView.text.suffix(from: textView.text.index(textView.text.startIndex, offsetBy: cursorPosition))
+
+            if afterCursor.hasPrefix("\u{2022}") {
+                let newCursorPosition = cursorPosition + 2
+                if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
+                    textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
+                }
+            }
+            
+            delegate?.autcompleteManager(complete: true)
+        }
+    }
     
     public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
@@ -431,8 +451,52 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
                 return false
             }
         }
-        
+                
         // End logic for detect enable/disable textView
+        
+        // Start logic for detect list
+        
+        if text == "\n" {
+            let cursorPosition = range.location
+            let textBeforeCursor = (textView.text as NSString).substring(to: cursorPosition)
+            let lines = textBeforeCursor.components(separatedBy: .newlines)
+            
+            if let currentLine = lines.last, currentLine.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("\u{2022}") {
+                if currentLine.trimmingCharacters(in: .whitespacesAndNewlines) == "\u{2022}" {
+                    // Remove bullet if line only contains bullet
+                    let updateTextAttributed = textView.attributedText.replacingCharacters(in: NSRange(location: cursorPosition - currentLine.count, length: currentLine.count), with: NSAttributedString(string: ""))
+                    textView.attributedText = updateTextAttributed
+                    
+                    // Move cursor to the correct position
+                    let newCursorPosition = cursorPosition - currentLine.count
+                    if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
+                        textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
+                    }
+                    delegate?.autcompleteManager(complete: true)
+                    return false
+                } else {
+                    // Insert bullet on the new line
+                    let newBulletText = "\n\u{2022} "
+                    if let textRange = Range(range, in: textView.text) {
+                        let attributes: [NSAttributedString.Key: Any] = [
+                            .font: textView.font
+                        ]
+                        let attributedText = NSAttributedString(string: newBulletText, attributes: attributes)
+                        let updateTextAttributed = textView.attributedText.replacingCharacters(in: range, with: attributedText)
+                        textView.attributedText = updateTextAttributed
+                        
+                        // Move cursor to the correct position
+                        let newCursorPosition = cursorPosition + newBulletText.count
+                        if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
+                            textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
+                        }
+                        return false
+                    }
+                }
+            }
+        }
+
+        // End logic for detect list
         
         preserveTypingAttributes()
         

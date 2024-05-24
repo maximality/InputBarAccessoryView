@@ -63,6 +63,10 @@ public protocol AutocompleteManagerDelegate: AnyObject {
     ///   - text: The text to autocomplete with
     /// - Returns: If the prefix can be autocompleted. Default is TRUE
     func autocompleteManager(_ manager: AutocompleteManager, shouldComplete prefix: String, with text: String) -> Bool
+    
+    ///
+    ///
+    func autcompleteManager(complete bulletListDetecter: Bool)
 }
 
 public extension AutocompleteManagerDelegate {
@@ -77,6 +81,9 @@ public extension AutocompleteManagerDelegate {
     
     func autocompleteManager(_ manager: AutocompleteManager, shouldComplete prefix: String, with text: String) -> Bool {
         return true
+    }
+    
+    func autcompleteManager(complete bulletListDetecter: Bool) {
     }
 }
 
