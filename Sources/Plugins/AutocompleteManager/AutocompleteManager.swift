@@ -476,7 +476,7 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
                     textView.attributedText = updateTextAttributed
                     
                     // Move cursor to the correct position
-                    let newCursorPosition = cursorPosition - currentLine.count
+                    let newCursorPosition = cursorPosition - currentLineRange.length
                     if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
                         textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
                     }
@@ -517,7 +517,7 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
                     textView.attributedText = updateTextAttributed
                     
                     // Move cursor to the correct position
-                    let newCursorPosition = cursorPosition - currentLine.count
+                    let newCursorPosition = cursorPosition - (currentLineRange.length - 1)
                     if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
                         textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
                     }
