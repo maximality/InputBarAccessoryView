@@ -118,7 +118,7 @@ internal extension NSAttributedString {
         ns.replaceCharacters(in: range, with: attributedString)
         return ns
     }
-    
+        
     static func += (lhs: inout NSAttributedString, rhs: NSAttributedString) {
         let ns = NSMutableAttributedString(attributedString: lhs)
         ns.append(rhs)
@@ -130,5 +130,4 @@ internal extension NSAttributedString {
         ns.append(rhs)
         return NSAttributedString(attributedString: ns)
     }
-    
 }

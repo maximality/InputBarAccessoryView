@@ -81,7 +81,11 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
     /// Default value is `TRUE`
     open var keepPrefixOnCompletion = true
     
-    
+    /// Symbol for bullet list
+    /// Default value is `NIL`
+
+    open var symbolForBulletList: String?
+        
     /// Used for detect characters count for enable/disable textVIew, if is nil - not used
     /// Default value is `NIL`
     open var maxCountCharactersForTextView: Int?
@@ -417,21 +421,24 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
     }
         
     public func textViewDidChangeSelection(_ textView: UITextView) {
-        let cursorPosition = textView.selectedRange.location
+        let cursorPosition = min(textView.selectedRange.location, textView.text.count)
         let textBeforeCursor = (textView.text as NSString).substring(to: cursorPosition)
         let lines = textBeforeCursor.components(separatedBy: .newlines)
-        if let currentLine = lines.last, currentLine.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("\u{2022}") {
+        let bulletSize = "\u{2002}\(symbolForBulletList ?? "\u{23FA}\u{0000FE0E}\u{2002}")".count
+        if let currentLine = lines.last, currentLine.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("\(symbolForBulletList ?? "\u{23FA}\u{0000FE0E}")") {
             delegate?.autcompleteManager(complete: false)
         } else {
             let afterCursor = textView.text.suffix(from: textView.text.index(textView.text.startIndex, offsetBy: cursorPosition))
 
-            if afterCursor.hasPrefix("\u{2022}") {
-                let newCursorPosition = cursorPosition + 2
+            if afterCursor.trimmingCharacters(in: .whitespaces).hasPrefix("\(symbolForBulletList ?? "\u{23FA}\u{0000FE0E}")") {
+                let offset = bulletSize - cursorPosition
+                let newCursorPosition = cursorPosition + offset
+
                 if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
                     textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
                 }
             }
-            
+
             delegate?.autcompleteManager(complete: true)
         }
     }
@@ -461,10 +468,11 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
             let textBeforeCursor = (textView.text as NSString).substring(to: cursorPosition)
             let lines = textBeforeCursor.components(separatedBy: .newlines)
             
-            if let currentLine = lines.last, currentLine.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("\u{2022}") {
-                if currentLine.trimmingCharacters(in: .whitespacesAndNewlines) == "\u{2022}" {
-                    // Remove bullet if line only contains bullet
-                    let updateTextAttributed = textView.attributedText.replacingCharacters(in: NSRange(location: cursorPosition - currentLine.count, length: currentLine.count), with: NSAttributedString(string: ""))
+            if let currentLine = lines.last,
+               currentLine.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("\(symbolForBulletList ?? "\u{23FA}\u{0000FE0E}")") {
+                if currentLine.trimmingCharacters(in: .whitespacesAndNewlines) == "\(symbolForBulletList ?? "\u{23FA}\u{0000FE0E}")" {
+                    let currentLineRange = (textView.text as NSString).lineRange(for: range)
+                    let updateTextAttributed = textView.attributedText.replacingCharacters(in: currentLineRange, with: NSAttributedString(string: ""))
                     textView.attributedText = updateTextAttributed
                     
                     // Move cursor to the correct position
@@ -476,7 +484,7 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
                     return false
                 } else {
                     // Insert bullet on the new line
-                    let newBulletText = "\n\u{2022} "
+                    let newBulletText = "\n\u{2002}\(symbolForBulletList ?? "\u{23FA}\u{0000FE0E}")\u{2002}"
                     if let textRange = Range(range, in: textView.text) {
                         let attributes: [NSAttributedString.Key: Any] = [
                             .font: textView.font
@@ -486,12 +494,34 @@ open class AutocompleteManager: NSObject, InputPlugin, UITextViewDelegate, UITab
                         textView.attributedText = updateTextAttributed
                         
                         // Move cursor to the correct position
-                        let newCursorPosition = cursorPosition + newBulletText.count
+                        let newCursorPosition = cursorPosition + (newBulletText.count + 1)
                         if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
                             textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
                         }
                         return false
                     }
+                }
+            }
+        } else if text == "" {
+            // Handle Backspace
+            let cursorPosition = range.location
+            let textBeforeCursor = (textView.text as NSString).substring(to: cursorPosition > 0 ? cursorPosition + 1 : cursorPosition)
+            let lines = textBeforeCursor.components(separatedBy: .newlines)
+            
+            if let currentLine = lines.last {
+                // Check if the current line contains only the bullet text
+                let bulletText = "\u{2002}\(symbolForBulletList ?? "\u{23FA}\u{0000FE0E}")\u{2002}"
+                if currentLine.trimmingCharacters(in: .whitespacesAndNewlines) == bulletText.trimmingCharacters(in: .whitespacesAndNewlines) {
+                    let currentLineRange = (textView.text as NSString).lineRange(for: range)
+                    let updateTextAttributed = textView.attributedText.replacingCharacters(in: currentLineRange, with: NSAttributedString(string: "".trimmingCharacters(in: .whitespaces)))
+                    textView.attributedText = updateTextAttributed
+                    
+                    // Move cursor to the correct position
+                    let newCursorPosition = cursorPosition - currentLine.count
+                    if let newPosition = textView.position(from: textView.beginningOfDocument, offset: newCursorPosition) {
+                        textView.selectedTextRange = textView.textRange(from: newPosition, to: newPosition)
+                    }
+                    return false
                 }
             }
         }
