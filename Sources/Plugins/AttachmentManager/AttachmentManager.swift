@@ -242,6 +242,7 @@ extension AttachmentManager: UICollectionViewDataSource, UICollectionViewDelegat
                 cell.indexPath = indexPath
                 cell.nameLabel.text = file.url.deletingPathExtension().lastPathComponent
                 cell.memoryLabel.text = file.url.pathExtension
+                cell.memoryLabel.textColor = file.memoryLabelColor
                 if file.url.startAccessingSecurityScopedResource() {
                     if let fileAttributes = try? FileManager.default.attributesOfItem(atPath: file.url.path), let bytes = fileAttributes[.size] as? Int64 {
                         cell.memoryLabel.text = "\(file.url.pathExtension), \(ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .file))"

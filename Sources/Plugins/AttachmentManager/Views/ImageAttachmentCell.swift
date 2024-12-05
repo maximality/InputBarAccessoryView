@@ -109,7 +109,7 @@ open class FileAttachmentCell: AttachmentCell {
         nameLabel.text = nil
         memoryLabel.text = nil
     }
-    
+        
     // MARK: - Setup
     
     private func setup() {
@@ -126,12 +126,12 @@ open class FileAttachmentCell: AttachmentCell {
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16.0),
             imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 28.0),
-            imageView.widthAnchor.constraint(equalToConstant: 36.0),
+            imageView.heightAnchor.constraint(equalToConstant: 32.0),
+            imageView.widthAnchor.constraint(equalToConstant: 32.0),
             nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 13.0),
             nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8.0),
             nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0),
-            memoryLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0),
+            memoryLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0.0),
             memoryLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8.0),
             memoryLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8.0)
         ])

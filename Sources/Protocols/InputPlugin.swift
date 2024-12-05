@@ -42,12 +42,14 @@ public class FileAttachment {
     public let image: UIImage
     public let height: CGFloat?
     public let width: CGFloat?
+    public let memoryLabelColor: UIColor?
     
-    public init(url: URL, image: UIImage, height: CGFloat? = nil, width: CGFloat? = nil) {
+    public init(url: URL, image: UIImage, height: CGFloat? = nil, width: CGFloat? = nil, memoryLabelColor: UIColor? = nil) {
         self.url = url
         self.image = image
         self.height = height
         self.width = width
+        self.memoryLabelColor = memoryLabelColor
     }
 }
 
